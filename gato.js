@@ -4,21 +4,26 @@ const button = document.getElementById("empezarJuego")
 const temporizador = document.getElementById("tiempo")
 let contadorX = 0
 let contadorO = 0
-
+let jugadas = 0
+let ganador = false
+let empate = true
 
 //mover humanoX0 con click - identidad => del forEach - miliretraso a maquina -detecta gane//
 const turnos = ["X","O"];
 function moverJugador() {
     cuadritos.forEach((cuadro)=> {
         cuadro.addEventListener("click",function(){
+            
            if(cuadro.innerHTML === ""){
               cuadro.innerHTML = turnos[0];
               setTimeout(() => {
                   moverMaquina()
               }, 800)
               detectarGanar()
+              empate()
               
             }
+            jugadas++
         });
     });
 }
@@ -30,7 +35,9 @@ function moverMaquina() {
             cuadroCualquiera.innerHTML = turnos[1];
                 moverJugador()
                 detectarGanar()
+                empate()
             };
+            jugadas++
     };
 moverJugador()
 //funcion boton reinicio//
@@ -54,6 +61,7 @@ for (const poss of ganadoras) {
             contadorX++
             setTimeout (() =>{
                 alert("GANÓ X")
+                ganador = true
             },1000)
             return
             
@@ -62,13 +70,14 @@ for (const poss of ganadoras) {
             contadorO++
             setTimeout (() =>{
                 alert("GANÓ O")
+                ganador=true
             },1000)
             return
        }
     }
 }
 };
-//  cuenta regresiva con setInterval//
+//  cuenta regresiva con setInterval //
 let terminaCuenta =false
 let redflag =false
 
@@ -78,17 +87,24 @@ function cuentaRegresiva(tiempo){
             tiempo--
             temporizador.textContent=tiempo
         }
-        if (tiempo===0 && !redflag) {
+        if (tiempo ===0 && !redflag) {
             alert ("GAME OVER")
             redflag = true
          }  
     }, 1000);
 }
-// funcion button empezar juego //
+// button empezar juego para cuenta regresiva //
 button.addEventListener ("click", function () {
     cuentaRegresiva(8)
     if (cuentaRegresiva === 0) {
         window.location.reload();
     }
 });
-
+// funcion empate con addElement y la condicional AND//
+function addElement(){
+    if (jugadas === 9 && !ganador && empate) {
+            alert("EMPATE!")
+            empate = false
+    }
+};
+        
